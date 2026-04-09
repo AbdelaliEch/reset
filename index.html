@@ -112,6 +112,10 @@ function gt(ds){
   if(d===6)t.physical.push({id:"swim",label:"Swimming",time:"8:30-9:30"});
   if(d===4)t.physical.push({id:"sport",label:"Football/basketball (optional)",time:"evening"});
   if(d===3||d===0)t.physical.push({id:"laundry",label:"Laundry",time:"22:00"});
+  // Discipline
+  t.mental.push({id:"no_pmo",label:"Clean day (no PMO)",time:""});
+  t.mental.push({id:"no_binge",label:"No emotional eating",time:""});
+  t.mental.push({id:"no_phone_wc",label:"No phone in bathroom",time:""});
   t.mental.push({id:"wake_fajr",label:"Woke up for Fajr (no snooze)",time:"5:40"});
   t.mental.push({id:"no_scroll_fajr",label:"No phone until Quran done",time:""});
   t.mental.push({id:"airplane_on",label:"Airplane mode ON before sleep",time:"~23:00"});
@@ -119,15 +123,12 @@ function gt(ds){
   t.mental.push({id:"airplane_kept",label:"Airplane ON until after Fajr+Quran",time:""});
   t.mental.push({id:"screen_limit",label:"Phone entertainment < 1 hour",time:""});
   t.mental.push({id:"browsers_off",label:"Browsers: school + tracker only",time:""});
-  t.mental.push({id:"no_phone_wc",label:"No phone in bathroom",time:""});
-  t.mental.push({id:"no_pmo",label:"Clean day (no PMO)",time:""});
-  t.mental.push({id:"no_binge",label:"No emotional eating",time:""});
   // Work / Study
-  t.work.push({id:"leetcode",label:"LeetCode — solve (30min) + NeetCode video (30min)",time:"7:30-8:30"});
+  t.work.push({id:"leetcode",label:"LeetCode — solve 30min + NeetCode 30min",time:"7:30-8:30"});
   t.work.push({id:"english",label:"Explained solution out loud in English",time:""});
-  t.work.push({id:"study_am",label:"Study block: after LeetCode → Dhuhr",time:"8:30-13:30"});
-  t.work.push({id:"study_pm1",label:"Study block: Dhuhr → Asr",time:"14:00-17:00"});
-  t.work.push({id:"study_pm2",label:"Study block: Asr → Maghrib",time:"17:15-19:30"});
+  t.work.push({id:"study_am",label:"Study block 1: Morning",time:"8:30-13:30"});
+  t.work.push({id:"study_pm1",label:"Study block 2: Dhuhr → Asr",time:"14:00-17:00"});
+  t.work.push({id:"study_pm2",label:"Study block 3: Asr → Maghrib",time:"17:15-19:30"});
   return t;
 }
 
@@ -177,7 +178,7 @@ function rn(){
 
   const ct=document.getElementById("ct");
   if(tab==="check"){
-    ct.innerHTML=rp("deen","Deen","🕌",ts.deen,ck,"#818cf8","#111127")+rp("physical","Physical","💪",ts.physical,ck,"#4ade80","#112011")+rp("work","Work","💻",ts.work,ck,"#fbbf24","#1f1a0f")+rp("mental","Mental & Habits","🧠",ts.mental,ck,"#f87171","#271111")+rnt();
+    ct.innerHTML=rp("deen","Deen","🕌",ts.deen,ck,"#818cf8","#111127")+rp("physical","Physical","💪",ts.physical,ck,"#4ade80","#112011")+rd(ts.mental,ck)+rp("work","Work","💻",ts.work,ck,"#fbbf24","#1f1a0f")+rnt();
   }else if(tab==="sched"){ct.innerHTML=rsc(nm)}
   else if(tab==="gym"&&ig){ct.innerHTML=rgm()}
   else if(tab==="help"){ct.innerHTML=rhl()}
@@ -191,6 +192,36 @@ function rp(key,label,icon,tasks,ck,acc,bg){
   let h='<div class="pl" style="background:'+bg+';border:1px solid '+acc+'25">';
   h+='<div class="ph"><div class="pt"><span class="ic">'+icon+'</span><span class="nm" style="color:'+acc+'">'+label+'</span></div>';
   h+='<div class="ps"><span class="ct" style="color:'+acc+'">'+dn+'/'+tasks.length+'</span><div class="pb" style="background:'+acc+'18"><div class="pf" style="width:'+pc+'%;background:'+acc+'"></div></div></div></div>';
+  tasks.forEach(t=>{
+    const d=!!ck[t.id];
+    h+='<div class="tk'+(d?' dn':'')+'" onclick="tg(\''+t.id+'\')">';
+    h+='<div class="cb'+(d?' ck':'')+'" style="border:2px solid '+(d?acc:acc+'50')+';background:'+(d?acc:'transparent')+'"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>';
+    h+='<span class="tl" style="'+(d?'color:'+acc:'')+'">'+t.label+'</span>';
+    if(t.time)h+='<span class="tt" style="color:'+acc+'">'+t.time+'</span>';
+    h+='</div>';
+  });
+  h+='</div>';return h;
+}
+
+function rd(tasks,ck){
+  const acc="#f87171",bg="#271111";
+  const clean=!!ck["no_pmo"];
+  const dn=tasks.filter(t=>ck[t.id]).length,pc=tasks.length?Math.round(dn/tasks.length*100):0;
+  let h='<div class="pl" style="background:'+bg+';border:1px solid '+acc+'25">';
+  h+='<div class="ph"><div class="pt"><span class="ic">⚔️</span><span class="nm" style="color:'+acc+'">Discipline</span></div>';
+  h+='<div class="ps"><span class="ct" style="color:'+acc+'">'+dn+'/'+tasks.length+'</span><div class="pb" style="background:'+acc+'18"><div class="pf" style="width:'+pc+'%;background:'+acc+'"></div></div></div></div>';
+  // Battle banner
+  if(clean){
+    h+='<div style="text-align:center;padding:8px;background:#10b98115;border-radius:10px;margin-bottom:10px;border:1px solid #10b98130">';
+    h+='<span style="font-size:12px;font-weight:800;color:#10b981">✓ CLEAN — '+sk.cur+' day'+(sk.cur!==1?'s':'')+' streak</span>';
+    if(sk.cur>=7)h+='<span style="font-size:11px;color:#10b981;opacity:.7"> — ما شاء الله</span>';
+    h+='</div>';
+  }else if(Object.keys(ck).length>3){
+    h+='<div style="text-align:center;padding:8px;background:#ef444415;border-radius:10px;margin-bottom:10px;border:1px solid #ef444430">';
+    h+='<span style="font-size:12px;font-weight:800;color:#ef4444">✗ RELAPSED — توضأ وصلِّ توبة — Don\'t spiral</span>';
+    h+='</div>';
+  }
+  // Tasks
   tasks.forEach(t=>{
     const d=!!ck[t.id];
     h+='<div class="tk'+(d?' dn':'')+'" onclick="tg(\''+t.id+'\')">';
