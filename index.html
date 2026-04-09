@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#08080f">
+<title>Abdelali's Reset</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#08080f;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:480px;margin:0 auto;padding:14px 12px 40px;min-height:100vh}
+.hdr{text-align:center;margin-bottom:18px}
+.hdr h1{font-size:21px;font-weight:800;letter-spacing:-.02em}
+.hdr p{font-size:11px;color:#556;margin-top:3px;font-family:monospace}
+.streaks{display:flex;gap:8px;justify-content:center;margin-bottom:18px}
+.sb{text-align:center;padding:10px 14px;border-radius:12px;min-width:75px}
+.sb .n{font-family:monospace;font-size:26px;font-weight:800;line-height:1}
+.sb .l{font-size:9px;opacity:.55;margin-top:3px;text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+.wr{display:flex;align-items:center;gap:6px;margin-bottom:10px}
+.wr .ar{background:none;border:1px solid #ffffff12;border-radius:8px;color:#778;cursor:pointer;padding:5px 9px;font-size:13px}
+.wd{display:flex;gap:3px;flex:1;justify-content:center}
+.db{flex:1;min-width:42px;max-width:54px;padding:7px 2px;border-radius:12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;background:#0b0b16;border:1px solid #ffffff0a}
+.db.sel{border:2px solid #818cf8;background:#818cf812}
+.db.td{border:2px solid #818cf835}
+.db .dn{font-size:9.5px;font-weight:700;text-transform:uppercase;color:#556}
+.db.sel .dn{color:#818cf8}
+.db .dd{font-size:15px;font-weight:700;font-family:monospace;color:#889}
+.db.sel .dd{color:#e8ecf2}
+.db .br{width:75%;height:3px;background:#ffffff0a;border-radius:2px;overflow:hidden}
+.db .bf{height:100%;border-radius:2px}
+.dl{text-align:center;margin-bottom:14px}
+.dl .nm{font-size:15px;font-weight:700}
+.dl .dt{font-size:12px;color:#556;margin-left:7px;font-family:monospace}
+.tabs{display:flex;gap:3px;margin-bottom:14px;background:#0b0b16;border-radius:11px;padding:3px}
+.tabs button{flex:1;padding:7px 6px;border-radius:9px;border:none;font-size:11.5px;font-weight:700;cursor:pointer;background:transparent;color:#556}
+.tabs button.on{background:#818cf818;color:#818cf8}
+.pl{border-radius:18px;padding:18px 16px 14px;margin-bottom:14px}
+.ph{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.pt{display:flex;align-items:center;gap:8px}
+.pt .ic{font-size:20px}
+.pt .nm{font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.ps{display:flex;align-items:center;gap:8px}
+.ps .ct{font-size:12px;opacity:.75;font-family:monospace}
+.ps .pb{width:52px;height:5px;border-radius:3px;overflow:hidden}
+.ps .pf{height:100%;border-radius:3px;transition:width .3s}
+.tk{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:10px;margin-bottom:2px;cursor:pointer;user-select:none;-webkit-user-select:none}
+.cb{width:24px;height:24px;min-width:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.cb svg{display:none}
+.cb.ck svg{display:block}
+.tl{flex:1;font-size:13.5px;font-weight:500;color:#dde4ee;transition:all .15s}
+.tk.dn .tl{text-decoration:line-through;opacity:.65}
+.tt{font-size:10.5px;font-family:monospace;white-space:nowrap;opacity:.4}
+.nb{background:#0b0b16;border:1px solid #ffffff0d;border-radius:16px;padding:18px;margin-bottom:14px}
+.nb .nt{font-size:13px;font-weight:800;color:#778;margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em}
+.nb textarea{width:100%;min-height:75px;padding:11px;border-radius:10px;border:1px solid #ffffff0d;background:#08080f;color:#c8d0dd;font-size:12.5px;resize:vertical;outline:none;font-family:inherit}
+.sc{background:#0a0a14;border:1px solid #ffffff0d;border-radius:16px;padding:18px;margin-bottom:14px}
+.sc .st{font-size:13px;font-weight:800;color:#778;margin-bottom:12px;text-transform:uppercase;letter-spacing:.04em}
+.si{display:flex;gap:10px;padding:4px 0}
+.si .tm{font-family:monospace;font-size:11.5px;opacity:.65;min-width:46px;text-align:right}
+.si .ln{width:2px;min-height:16px;border-radius:1px;opacity:.25}
+.si .ac{font-size:12.5px;color:#c8d0dd;font-weight:500}
+.gc{background:#112011;border:1px solid #4ade8025;border-radius:16px;padding:18px;margin-bottom:14px}
+.gc .gt{font-size:13px;font-weight:800;color:#4ade80;margin-bottom:14px;text-transform:uppercase;letter-spacing:.04em}
+.ge{display:flex;justify-content:space-between;align-items:center;padding:9px 10px;background:#4ade8006;border-radius:8px;margin-bottom:4px}
+.ge .en{font-size:13.5px;font-weight:600;color:#e2e8f0}
+.ge .ed{font-size:10.5px;color:#4ade80;opacity:.55}
+.ge .es{font-size:10.5px;color:#4ade80;font-family:monospace;white-space:nowrap}
+.hc{border-radius:16px;padding:18px;margin-bottom:14px}
+.hc .ht{font-size:13px;font-weight:800;margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em}
+.hc .hi{font-size:12.5px;line-height:1.7;font-weight:500}
+.vd{margin-top:20px;border-top:1px solid #ffffff08;padding-top:18px}
+.vd .vt{text-align:center;font-size:16px;font-weight:800;letter-spacing:.02em;margin-bottom:6px}
+.vd .vs{text-align:center;font-size:12.5px;color:#99a;line-height:1.6;padding:0 8px}
+.co{font-size:11.5px;padding:8px 12px;border-radius:10px;font-weight:600;margin-top:4px;border-left:3px solid}
+</style>
+</head>
+<body>
+<div class="hdr"><h1>ABDELALI'S RESET</h1><p>Physical · Deen · Mental — Every Day</p></div>
+<div class="streaks" id="streaks"></div>
+<div class="wr"><button class="ar" onclick="sw(-1)">&lsaquo;</button><div class="wd" id="wd"></div><button class="ar" onclick="sw(1)">&rsaquo;</button></div>
+<div class="dl" id="dl"></div>
+<div class="tabs" id="tabs"></div>
+<div id="ct"></div>
+<div class="vd" id="vd"></div>
+<script>
+const D=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],S=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const fm=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const ps=s=>{const[a,b,c]=s.split("-").map(Number);return new Date(a,b-1,c)};
+const td=()=>fm(new Date()),dw=s=>ps(s).getDay();
+let sel=td(),tab="check",ad={},sk={cur:0,best:0,last:null};
+
+const lg=k=>{try{return JSON.parse(localStorage.getItem(k))}catch{return null}};
+const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
+
+function gt(ds){
+  const d=dw(ds),t={deen:[],physical:[],mental:[]};
+  t.deen.push({id:"fajr",label:"Salat Al-Fajr — صلاة الفجر",time:"~5:45"});
+  t.deen.push({id:"quran",label:"Quran — صفحة واحدة بعد الفجر",time:"~6:10"});
+  t.deen.push({id:"adhkar_am",label:"Adhkar As-Sabah — أذكار الصباح",time:"~6:15"});
+  t.deen.push({id:"dhuhr",label:"Salat Adh-Dhuhr — صلاة الظهر",time:"~13:40"});
+  t.deen.push({id:"asr",label:"Salat Al-Asr — صلاة العصر",time:"~17:00"});
+  t.deen.push({id:"maghrib",label:"Salat Al-Maghrib — صلاة المغرب",time:"~19:50"});
+  t.deen.push({id:"isha",label:"Salat Al-Isha — صلاة العشاء",time:"~21:10"});
+  t.deen.push({id:"adhkar_pm",label:"Adhkar Al-Masa' — أذكار المساء",time:"قبل النوم"});
+  t.physical.push({id:"breakfast",label:"Breakfast at restaurant",time:"7:00-9:00"});
+  t.physical.push({id:"lunch",label:"Lunch: home food + fruit + yoghurt",time:"12:00-15:00"});
+  t.physical.push({id:"dinner",label:"Dinner: home food + fruit + yoghurt",time:"19:00-22:00"});
+  t.physical.push({id:"water",label:"2L+ water",time:""});
+  t.physical.push({id:"no_junk",label:"Zero fast food / junk",time:""});
+  if(d===1||d===3||d===5)t.physical.push({id:"gym",label:"Gym session (towel!)",time:"9:00-10:30"});
+  if(d===6)t.physical.push({id:"swim",label:"Swimming",time:"8:30-9:30"});
+  if(d===4)t.physical.push({id:"sport",label:"Football/basketball (optional)",time:"evening"});
+  if(d===3||d===0)t.physical.push({id:"laundry",label:"Laundry",time:"22:00"});
+  t.mental.push({id:"wake_fajr",label:"Woke up for Fajr (no snooze)",time:"5:40"});
+  t.mental.push({id:"no_scroll_fajr",label:"No phone until Quran done",time:""});
+  t.mental.push({id:"airplane_on",label:"Airplane mode ON before sleep",time:"~23:00"});
+  t.mental.push({id:"quran_sleep",label:"Fell asleep to Quran audio",time:""});
+  t.mental.push({id:"airplane_kept",label:"Airplane ON until after Fajr+Quran",time:""});
+  t.mental.push({id:"screen_limit",label:"Phone entertainment < 1 hour",time:""});
+  t.mental.push({id:"browsers_off",label:"Browsers: school + tracker only",time:""});
+  t.mental.push({id:"no_phone_wc",label:"No phone in bathroom",time:""});
+  t.mental.push({id:"no_pmo",label:"Clean day (no PMO)",time:""});
+  t.mental.push({id:"no_binge",label:"No emotional eating",time:""});
+  return t;
+}
+
+function wk(c){const d=ps(c),w=d.getDay(),m=new Date(d);m.setDate(d.getDate()-((w+6)%7));return Array.from({length:7},(_,i)=>{const x=new Date(m);x.setDate(m.getDate()+i);return fm(x)})}
+
+function ld(){sk=lg("sk")||{cur:0,best:0,last:null};ad={};wk(sel).forEach(d=>{ad[d]=lg("d:"+d)||{}})}
+
+function tg(id){
+  const c=ad[sel]||{};c[id]=!c[id];ad[sel]=c;sv("d:"+sel,c);
+  if(id==="no_pmo"){
+    if(c.no_pmo){if(!sk.last)sk.cur=1;else{const df=Math.round((ps(sel)-ps(sk.last))/864e5);sk.cur=df===1?sk.cur+1:1}sk.last=sel;sk.best=Math.max(sk.best,sk.cur)}else sk.cur=0;
+    sv("sk",sk);
+  }
+  rn();
+}
+
+function sw(dir){const d=ps(sel);d.setDate(d.getDate()+dir*7);sel=fm(d);ld();rn()}
+function sd(d){sel=d;ld();rn()}
+function st(t){tab=t;rn()}
+function sn(){const v=document.getElementById("na");if(v)sv("n:"+sel,v.value)}
+
+function rn(){
+  const ts=gt(sel),ck=ad[sel]||{},all=[...ts.deen,...ts.physical,...ts.mental];
+  const dn=all.filter(t=>ck[t.id]).length,pct=all.length?Math.round(dn/all.length*100):0;
+  const nm=D[dw(sel)],ig=["Monday","Wednesday","Friday"].includes(nm);
+
+  document.getElementById("streaks").innerHTML=[
+    {v:sk.cur,l:"Clean Streak",c:"#818cf8"},{v:sk.best,l:"Best Streak",c:"#4ade80"},
+    {v:pct+"%",l:"Today",c:pct===100?"#4ade80":pct>50?"#fbbf24":"#f87171"}
+  ].map(b=>'<div class="sb" style="background:'+b.c+'0d;border:1px solid '+b.c+'20"><div class="n" style="color:'+b.c+'">'+b.v+'</div><div class="l" style="color:'+b.c+'">'+b.l+'</div></div>').join("");
+
+  const t2=td(),wks=wk(sel);
+  document.getElementById("wd").innerHTML=wks.map(date=>{
+    const s2=date===sel,it=date===t2,dd=ad[date]||{},tk=gt(date);
+    const a2=[...tk.deen,...tk.physical,...tk.mental],d2=a2.filter(t=>dd[t.id]).length,p2=a2.length?Math.round(d2/a2.length*100):0;
+    const cl="db"+(s2?" sel":"")+(it&&!s2?" td":"");
+    const bc=p2===100?"#4ade80":p2>50?"#818cf8":p2>0?"#f87171":"transparent";
+    return '<div class="'+cl+'" onclick="sd(\''+date+'\')"><span class="dn">'+S[dw(date)]+'</span><span class="dd">'+ps(date).getDate()+'</span><div class="br"><div class="bf" style="width:'+p2+'%;background:'+bc+'"></div></div></div>';
+  }).join("");
+
+  document.getElementById("dl").innerHTML='<span class="nm">'+nm+'</span><span class="dt">'+sel+'</span>';
+
+  const tbs=[{k:"check",l:"Checklist"},{k:"sched",l:"Schedule"}];
+  if(ig)tbs.push({k:"gym",l:"Gym"});
+  tbs.push({k:"help",l:"Help"});
+  document.getElementById("tabs").innerHTML=tbs.map(t=>'<button class="'+(tab===t.k?"on":"")+'" onclick="st(\''+t.k+'\')">'+t.l+'</button>').join("");
+
+  const ct=document.getElementById("ct");
+  if(tab==="check"){
+    ct.innerHTML=rp("deen","Deen","🕌",ts.deen,ck,"#818cf8","#111127")+rp("physical","Physical","💪",ts.physical,ck,"#4ade80","#112011")+rp("mental","Mental & Habits","🧠",ts.mental,ck,"#f87171","#271111")+rnt();
+  }else if(tab==="sched"){ct.innerHTML=rsc(nm)}
+  else if(tab==="gym"&&ig){ct.innerHTML=rgm()}
+  else if(tab==="help"){ct.innerHTML=rhl()}
+  else ct.innerHTML="";
+
+  document.getElementById("vd").innerHTML=rvd(ts,ck,pct);
+}
+
+function rp(key,label,icon,tasks,ck,acc,bg){
+  const dn=tasks.filter(t=>ck[t.id]).length,pc=tasks.length?Math.round(dn/tasks.length*100):0;
+  let h='<div class="pl" style="background:'+bg+';border:1px solid '+acc+'25">';
+  h+='<div class="ph"><div class="pt"><span class="ic">'+icon+'</span><span class="nm" style="color:'+acc+'">'+label+'</span></div>';
+  h+='<div class="ps"><span class="ct" style="color:'+acc+'">'+dn+'/'+tasks.length+'</span><div class="pb" style="background:'+acc+'18"><div class="pf" style="width:'+pc+'%;background:'+acc+'"></div></div></div></div>';
+  tasks.forEach(t=>{
+    const d=!!ck[t.id];
+    h+='<div class="tk'+(d?' dn':'')+'" onclick="tg(\''+t.id+'\')">';
+    h+='<div class="cb'+(d?' ck':'')+'" style="border:2px solid '+(d?acc:acc+'50')+';background:'+(d?acc:'transparent')+'"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>';
+    h+='<span class="tl" style="'+(d?'color:'+acc:'')+'">'+t.label+'</span>';
+    if(t.time)h+='<span class="tt" style="color:'+acc+'">'+t.time+'</span>';
+    h+='</div>';
+  });
+  h+='</div>';return h;
+}
+
+function rnt(){
+  const n=lg("n:"+sel)||"";
+  return '<div class="nb"><div class="nt">Daily Notes</div><textarea id="na" oninput="sn()" placeholder="Wins? Struggles? Triggers? Tomorrow\'s plan?">'+n+'</textarea></div>';
+}
+
+function rsc(nm){
+  const ig=["Monday","Wednesday","Friday"].includes(nm),is=nm==="Saturday";
+  const s=[
+    {t:"5:40",a:"Alarm (airplane still ON)",c:"#f87171"},
+    {t:"5:45",a:"صلاة الفجر — Fajr at mosque",c:"#818cf8"},
+    {t:"~6:10",a:"Quran + أذكار الصباح",c:"#818cf8"},
+    {t:"~6:20",a:"Turn OFF airplane mode",c:"#f87171"},
+    {t:"~6:30",a:"Trottinette → school",c:"#778"},
+    {t:"7:00",a:"Breakfast at restaurant",c:"#4ade80"},
+  ];
+  if(ig){s.push({t:"7:30",a:"Study",c:"#fbbf24"},{t:"9:00",a:"GYM (towel!)",c:"#4ade80"},{t:"10:30",a:"Shower → study",c:"#fbbf24"})}
+  else if(is){s.push({t:"7:30",a:"Study",c:"#fbbf24"},{t:"8:30",a:"SWIMMING",c:"#4ade80"},{t:"9:30",a:"Shower → study",c:"#fbbf24"})}
+  else s.push({t:"7:30",a:"Study",c:"#fbbf24"});
+  s.push({t:"12:00",a:"Lunch",c:"#4ade80"},{t:"13:00",a:"Study",c:"#fbbf24"},{t:"~13:40",a:"صلاة الظهر — Dhuhr",c:"#818cf8"},{t:"~17:00",a:"صلاة العصر — Asr",c:"#818cf8"},{t:"19:00",a:"Dinner",c:"#4ade80"},{t:"~19:50",a:"صلاة المغرب — Maghrib",c:"#818cf8"},{t:"20:00",a:"LeetCode (1 problem)",c:"#fbbf24"},{t:"~21:10",a:"صلاة العشاء — Isha",c:"#818cf8"},{t:"21:30",a:"Home: wind down",c:"#778"});
+  if(nm==="Wednesday"||nm==="Sunday")s.push({t:"22:00",a:"Laundry",c:"#778"});
+  s.push({t:"22:30",a:"أذكار المساء — Evening adhkar",c:"#818cf8"},{t:"~23:00",a:"Airplane ON → Quran audio → sleep",c:"#f87171"});
+  const lb=ig?"Gym Day":is?"Swim Day":nm==="Thursday"?"Sport Day":"Rest Day";
+  return '<div class="sc"><div class="st">'+lb+'</div>'+s.map(x=>'<div class="si"><span class="tm" style="color:'+x.c+'">'+x.t+'</span><div class="ln" style="background:'+x.c+'"></div><span class="ac">'+x.a+'</span></div>').join("")+'</div>';
+}
+
+function rgm(){
+  const e=[
+    {n:"Warm-up",d:"5 min walk/treadmill",s:""},
+    {n:"1. Goblet Squats",d:"Dumbbell at chest",s:"3×12 — 8kg"},
+    {n:"2. Push-ups",d:"Knees if needed",s:"3 × max"},
+    {n:"3. Dumbbell Rows",d:"One arm, bench",s:"3×10 — 8-10kg"},
+    {n:"4. Overhead DB Press",d:"Seated",s:"3×10 — 6kg"},
+    {n:"5. Walking Lunges",d:"Bodyweight",s:"3×10/leg"},
+    {n:"6. Plank",d:"Hold position",s:"3 × max"},
+    {n:"7. Dead Hangs",d:"Pull-up bar (GRIP FIX)",s:"3 × max"},
+    {n:"Cool-down",d:"Stretch 5 min",s:""},
+  ];
+  return '<div class="gc"><div class="gt">Gym Routine — Month 1</div>'+e.map(x=>'<div class="ge"><div><div class="en">'+x.n+'</div><div class="ed">'+x.d+'</div></div><span class="es">'+x.s+'</span></div>').join("")+'<div style="font-size:10.5px;color:#778;margin-top:8px">Rest 60-90s between sets. Bring towel. Progress: reps → then +2kg.</div></div>';
+}
+
+function rhl(){
+  let h='<div class="hc" style="background:#271111;border:1px solid #f8717125"><div class="ht" style="color:#f87171">If You Relapse — Read This</div>';
+  ["1. STOP. One slip ≠ total failure.","2. توضأ — Make wudu immediately.","3. صلِّ ركعتين توبة — Pray 2 rakaat tawbah.","4. Do NOT skip next salah. الصلاة = the cleaning.","5. Write in notes: trigger? time? feeling?","6. Continue your day as planned.","7. ﴿قُلْ يَا عِبَادِيَ الَّذِينَ أَسْرَفُوا عَلَىٰ أَنفُسِهِمْ لَا تَقْنَطُوا مِن رَّحْمَةِ اللَّهِ﴾ — (39:53)"].forEach(s=>{h+='<div class="hi" style="color:#fca5a5">'+s+'</div>'});
+  h+='</div>';
+  h+='<div class="hc" style="background:#0b0b16;border:1px solid #ffffff0d"><div class="ht" style="color:#778">Phone Rules</div>';
+  ["Airplane mode ON before sleep → Quran audio → face down","Morning: alarm off → DO NOT turn off airplane → go to صلاة الفجر","After Fajr + Quran: NOW turn off airplane","Browsers: school + tracker ONLY","YouTube Shorts: disabled","Screen time: 1hr max (PIN with roommate)","NEVER take phone to bathroom"].forEach(r=>{h+='<div class="hi" style="color:#aab">→ '+r+'</div>'});
+  h+='</div>';
+  h+='<div class="hc" style="background:#0b0b16;border:1px solid #ffffff0d"><div class="ht" style="color:#778">Nutrition Rules</div>';
+  ["3 meals at restaurant ONLY — always home food","Main dish + fruit + yoghurt. Skip juice & dessert","Between meals: water ONLY. Carry 1.5L bottle","Zero fast food, delivery, or snacks","When hungry: water → wait 15 min → walk"].forEach(r=>{h+='<div class="hi" style="color:#aab">→ '+r+'</div>'});
+  h+='</div>';
+  h+='<div class="hc" style="background:#0b0b16;border:1px solid #ffffff0d"><div class="ht" style="color:#778">When Urges Hit</div>';
+  ["1. Leave the room immediately","2. Drink a full glass of water","3. Walk 5-10 min (urge peaks then drops)","4. Call family or text a friend","5. توضأ — Make wudu","6. The urge passes in 15 min. Survive the window."].forEach(r=>{h+='<div class="hi" style="color:#aab">→ '+r+'</div>'});
+  h+='</div>';
+  return h;
+}
+
+function rvd(ts,ck,pct){
+  const mp=ts.deen.filter(t=>t.id!=="quran"&&t.id!=="adhkar_am"&&t.id!=="adhkar_pm"&&!ck[t.id]).length;
+  const aj=!ck["no_junk"],rl=!ck["no_pmo"]&&Object.keys(ck).length>3;
+  const sg=ts.physical.some(t=>t.id==="gym")&&!ck["gym"];
+  const pb=!ck["no_phone_wc"]&&Object.keys(ck).length>3;
+  let tt="",cl="#556",sb="";
+  if(pct===100){tt="يوم مثالي — PERFECT DAY";cl="#4ade80";
+    sb=sk.cur>=7?sk.cur+" days clean. ﴿فَإِنَّ مَعَ الْعُسْرِ يُسْرًا﴾ (94:6) — You're living this ayah. BCG is getting closer every day."
+      :sk.cur>=3?sk.cur+" days clean. Salawat on time, body trained, mind clear. This is the Abdelali that walks into BCG."
+      :"All salawat on time. Body fed and trained. Mind disciplined. One day closer to BCG, financial freedom, and helping your family. اللهم بارك.";
+  }else if(pct>=85){tt="يوم قوي — STRONG DAY";cl="#4ade80";
+    sb="Almost perfect. ﴿وَسَارِعُوا إِلَىٰ مَغْفِرَةٍ مِّن رَّبِّكُمْ﴾ (3:133) — Close the gap tomorrow.";
+  }else if(pct>=65){tt="مقبول لكن غير كافي — NOT ENOUGH";cl="#fbbf24";
+    if(mp>0)sb="You missed "+mp+" salah. ﴿إِنَّ الصَّلَاةَ تَنْهَىٰ عَنِ الْفَحْشَاءِ وَالْمُنكَرِ﴾ (29:45) — Salah protects everything else. Fix this first.";
+    else if(aj)sb="Junk food = money gone + no body change. You want to walk into BCG confident? That starts today.";
+    else if(sg)sb="You skipped gym. 95kg doesn't become 80kg by skipping. Show up.";
+    else sb="Partial effort = partial results. The person who gets into BCG doesn't coast.";
+  }else if(pct>=40){tt="يوم ضعيف — WEAK DAY";cl="#f87171";
+    if(rl)sb="﴿لَا تَقْنَطُوا مِن رَّحْمَةِ اللَّهِ﴾ (39:53) — Make wudu. Pray tawbah. Don't spiral. Read Help tab.";
+    else if(mp>=3)sb=mp+" salawat missed. Your foundation with Allah is cracking. He opens the doors you're chasing. Go back to Him.";
+    else sb="Most of the day wasted. Phone? Boredom? You spent 3 years going in circles. Write what went wrong.";
+  }else{tt="لم تحضر اليوم — YOU DIDN'T SHOW UP";cl="#f87171";
+    sb="This is the old Abdelali — sleeps till noon, scrolls till 3am, eats junk. You left Agadir for Benguerir to change. Your family is counting on you. NOW. Check one box.";
+  }
+  let h='<div class="vt" style="color:'+cl+'">'+tt+'</div><div class="vs">'+sb+'</div>';
+  const co=[];
+  if(ck["fajr"]&&ck["quran"])co.push({t:"﴿إِنَّ قُرْآنَ الْفَجْرِ كَانَ مَشْهُودًا﴾ (17:78) — Fajr + Quran done. Allah saw you.",c:"#818cf8"});
+  if(ck["gym"]||ck["swim"])co.push({t:"You trained today. One step closer to walking into BCG with confidence.",c:"#4ade80"});
+  if(ck["no_pmo"]&&sk.cur>=3)co.push({t:sk.cur+" days clean. Your salah hits different when you're clean. Keep going.",c:"#818cf8"});
+  if(ck["no_pmo"]&&sk.cur>=7)co.push({t:"One week+ clean. ﴿لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا﴾ (2:286) — You CAN bear this.",c:"#4ade80"});
+  if(pb)co.push({t:"Phone went to bathroom. #1 danger zone. Leave it outside.",c:"#f87171"});
+  if(aj)co.push({t:"Junk food = 0 MAD at month end. Restaurant only.",c:"#f87171"});
+  if(mp>=3)co.push({t:"Multiple salawat missed. Tomorrow: Fajr at mosque, no matter what.",c:"#f87171"});
+  if(co.length)h+='<div style="margin-top:10px">'+co.map(c=>'<div class="co" style="color:'+c.c+';background:'+c.c+'0a;border-color:'+c.c+'40">'+c.t+'</div>').join("")+'</div>';
+  return h;
+}
+
+ld();rn();
+</script>
+</body>
+</html>
