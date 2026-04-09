@@ -94,7 +94,7 @@ const lg=k=>{try{return JSON.parse(localStorage.getItem(k))}catch{return null}};
 const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
 
 function gt(ds){
-  const d=dw(ds),t={deen:[],physical:[],mental:[]};
+  const d=dw(ds),t={deen:[],physical:[],mental:[],work:[]};
   t.deen.push({id:"fajr",label:"Salat Al-Fajr — صلاة الفجر",time:"~5:45"});
   t.deen.push({id:"quran",label:"Quran — صفحة واحدة بعد الفجر",time:"~6:10"});
   t.deen.push({id:"adhkar_am",label:"Adhkar As-Sabah — أذكار الصباح",time:"~6:15"});
@@ -122,6 +122,12 @@ function gt(ds){
   t.mental.push({id:"no_phone_wc",label:"No phone in bathroom",time:""});
   t.mental.push({id:"no_pmo",label:"Clean day (no PMO)",time:""});
   t.mental.push({id:"no_binge",label:"No emotional eating",time:""});
+  // Work / Study
+  t.work.push({id:"leetcode",label:"LeetCode — solve (30min) + NeetCode video (30min)",time:"7:30-8:30"});
+  t.work.push({id:"english",label:"Explained solution out loud in English",time:""});
+  t.work.push({id:"study_am",label:"Study block: after LeetCode → Dhuhr",time:"8:30-13:30"});
+  t.work.push({id:"study_pm1",label:"Study block: Dhuhr → Asr",time:"14:00-17:00"});
+  t.work.push({id:"study_pm2",label:"Study block: Asr → Maghrib",time:"17:15-19:30"});
   return t;
 }
 
@@ -144,7 +150,7 @@ function st(t){tab=t;rn()}
 function sn(){const v=document.getElementById("na");if(v)sv("n:"+sel,v.value)}
 
 function rn(){
-  const ts=gt(sel),ck=ad[sel]||{},all=[...ts.deen,...ts.physical,...ts.mental];
+  const ts=gt(sel),ck=ad[sel]||{},all=[...ts.deen,...ts.physical,...ts.mental,...ts.work];
   const dn=all.filter(t=>ck[t.id]).length,pct=all.length?Math.round(dn/all.length*100):0;
   const nm=D[dw(sel)],ig=["Monday","Wednesday","Friday"].includes(nm);
 
@@ -156,7 +162,7 @@ function rn(){
   const t2=td(),wks=wk(sel);
   document.getElementById("wd").innerHTML=wks.map(date=>{
     const s2=date===sel,it=date===t2,dd=ad[date]||{},tk=gt(date);
-    const a2=[...tk.deen,...tk.physical,...tk.mental],d2=a2.filter(t=>dd[t.id]).length,p2=a2.length?Math.round(d2/a2.length*100):0;
+    const a2=[...tk.deen,...tk.physical,...tk.mental,...tk.work],d2=a2.filter(t=>dd[t.id]).length,p2=a2.length?Math.round(d2/a2.length*100):0;
     const cl="db"+(s2?" sel":"")+(it&&!s2?" td":"");
     const bc=p2===100?"#4ade80":p2>50?"#818cf8":p2>0?"#f87171":"transparent";
     return '<div class="'+cl+'" onclick="sd(\''+date+'\')"><span class="dn">'+S[dw(date)]+'</span><span class="dd">'+ps(date).getDate()+'</span><div class="br"><div class="bf" style="width:'+p2+'%;background:'+bc+'"></div></div></div>';
@@ -171,7 +177,7 @@ function rn(){
 
   const ct=document.getElementById("ct");
   if(tab==="check"){
-    ct.innerHTML=rp("deen","Deen","🕌",ts.deen,ck,"#818cf8","#111127")+rp("physical","Physical","💪",ts.physical,ck,"#4ade80","#112011")+rp("mental","Mental & Habits","🧠",ts.mental,ck,"#f87171","#271111")+rnt();
+    ct.innerHTML=rp("deen","Deen","🕌",ts.deen,ck,"#818cf8","#111127")+rp("physical","Physical","💪",ts.physical,ck,"#4ade80","#112011")+rp("work","Work","💻",ts.work,ck,"#fbbf24","#1f1a0f")+rp("mental","Mental & Habits","🧠",ts.mental,ck,"#f87171","#271111")+rnt();
   }else if(tab==="sched"){ct.innerHTML=rsc(nm)}
   else if(tab==="gym"&&ig){ct.innerHTML=rgm()}
   else if(tab==="help"){ct.innerHTML=rhl()}
@@ -211,10 +217,10 @@ function rsc(nm){
     {t:"~6:30",a:"Trottinette → school",c:"#778"},
     {t:"7:00",a:"Breakfast at restaurant",c:"#4ade80"},
   ];
-  if(ig){s.push({t:"7:30",a:"Study",c:"#fbbf24"},{t:"9:00",a:"GYM (towel!)",c:"#4ade80"},{t:"10:30",a:"Shower → study",c:"#fbbf24"})}
-  else if(is){s.push({t:"7:30",a:"Study",c:"#fbbf24"},{t:"8:30",a:"SWIMMING",c:"#4ade80"},{t:"9:30",a:"Shower → study",c:"#fbbf24"})}
-  else s.push({t:"7:30",a:"Study",c:"#fbbf24"});
-  s.push({t:"12:00",a:"Lunch",c:"#4ade80"},{t:"13:00",a:"Study",c:"#fbbf24"},{t:"~13:40",a:"صلاة الظهر — Dhuhr",c:"#818cf8"},{t:"~17:00",a:"صلاة العصر — Asr",c:"#818cf8"},{t:"19:00",a:"Dinner",c:"#4ade80"},{t:"~19:50",a:"صلاة المغرب — Maghrib",c:"#818cf8"},{t:"20:00",a:"LeetCode (1 problem)",c:"#fbbf24"},{t:"~21:10",a:"صلاة العشاء — Isha",c:"#818cf8"},{t:"21:30",a:"Home: wind down",c:"#778"});
+  if(ig){s.push({t:"7:30",a:"LeetCode: solve 30min + NeetCode 30min",c:"#fbbf24"},{t:"8:30",a:"Study",c:"#fbbf24"},{t:"9:00",a:"GYM (towel!)",c:"#4ade80"},{t:"10:30",a:"Shower → study",c:"#fbbf24"})}
+  else if(is){s.push({t:"7:30",a:"LeetCode: solve 30min + NeetCode 30min",c:"#fbbf24"},{t:"8:30",a:"SWIMMING",c:"#4ade80"},{t:"9:30",a:"Shower → study",c:"#fbbf24"})}
+  else s.push({t:"7:30",a:"LeetCode: solve 30min + NeetCode 30min",c:"#fbbf24"},{t:"8:30",a:"Study",c:"#fbbf24"});
+  s.push({t:"12:00",a:"Lunch",c:"#4ade80"},{t:"13:00",a:"Study",c:"#fbbf24"},{t:"~13:40",a:"صلاة الظهر — Dhuhr",c:"#818cf8"},{t:"~17:00",a:"صلاة العصر — Asr",c:"#818cf8"},{t:"19:00",a:"Dinner",c:"#4ade80"},{t:"~19:50",a:"صلاة المغرب — Maghrib",c:"#818cf8"},{t:"20:00",a:"Wind down / call family",c:"#778"},{t:"~21:10",a:"صلاة العشاء — Isha",c:"#818cf8"},{t:"21:30",a:"Home: prep bag, notes",c:"#778"});
   if(nm==="Wednesday"||nm==="Sunday")s.push({t:"22:00",a:"Laundry",c:"#778"});
   s.push({t:"22:30",a:"أذكار المساء — Evening adhkar",c:"#818cf8"},{t:"~23:00",a:"Airplane ON → Quran audio → sleep",c:"#f87171"});
   const lb=ig?"Gym Day":is?"Swim Day":nm==="Thursday"?"Sport Day":"Rest Day";
@@ -284,6 +290,9 @@ function rvd(ts,ck,pct){
   if(ck["no_pmo"]&&sk.cur>=7)co.push({t:"One week+ clean. ﴿لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا﴾ (2:286) — You CAN bear this.",c:"#4ade80"});
   if(pb)co.push({t:"Phone went to bathroom. #1 danger zone. Leave it outside.",c:"#f87171"});
   if(aj)co.push({t:"Junk food = 0 MAD at month end. Restaurant only.",c:"#f87171"});
+  if(ck["leetcode"])co.push({t:"LeetCode done. One more problem closer to passing CodeSignal at BCG.",c:"#fbbf24"});
+  if(ck["study_am"]&&ck["study_pm1"]&&ck["study_pm2"])co.push({t:"All 3 study blocks completed. This is how you outwork everyone.",c:"#fbbf24"});
+  if(!ck["leetcode"]&&Object.keys(ck).length>5)co.push({t:"No LeetCode today. It's the FIRST thing after breakfast. Don't skip it tomorrow.",c:"#f87171"});
   if(mp>=3)co.push({t:"Multiple salawat missed. Tomorrow: Fajr at mosque, no matter what.",c:"#f87171"});
   if(co.length)h+='<div style="margin-top:10px">'+co.map(c=>'<div class="co" style="color:'+c.c+';background:'+c.c+'0a;border-color:'+c.c+'40">'+c.t+'</div>').join("")+'</div>';
   return h;
