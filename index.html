@@ -60,12 +60,12 @@ body{background:#08080f;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFo
 .si .tm{font-family:monospace;font-size:11.5px;opacity:.65;min-width:46px;text-align:right}
 .si .ln{width:2px;min-height:16px;border-radius:1px;opacity:.25}
 .si .ac{font-size:12.5px;color:#c8d0dd;font-weight:500}
-.gc{background:#112011;border:1px solid #4ade8025;border-radius:16px;padding:18px;margin-bottom:14px}
-.gc .gt{font-size:13px;font-weight:800;color:#4ade80;margin-bottom:14px;text-transform:uppercase;letter-spacing:.04em}
-.ge{display:flex;justify-content:space-between;align-items:center;padding:9px 10px;background:#4ade8006;border-radius:8px;margin-bottom:4px}
+.gc{background:#0a1620;border:1px solid #38bdf825;border-radius:16px;padding:18px;margin-bottom:14px}
+.gc .gt{font-size:13px;font-weight:800;color:#38bdf8;margin-bottom:14px;text-transform:uppercase;letter-spacing:.04em}
+.ge{display:flex;justify-content:space-between;align-items:center;padding:9px 10px;background:#38bdf806;border-radius:8px;margin-bottom:4px}
 .ge .en{font-size:13.5px;font-weight:600;color:#e2e8f0}
-.ge .ed{font-size:10.5px;color:#4ade80;opacity:.55}
-.ge .es{font-size:10.5px;color:#4ade80;font-family:monospace;white-space:nowrap}
+.ge .ed{font-size:10.5px;color:#38bdf8;opacity:.55}
+.ge .es{font-size:10.5px;color:#38bdf8;font-family:monospace;white-space:nowrap}
 .hc{border-radius:16px;padding:18px;margin-bottom:14px}
 .hc .ht{font-size:13px;font-weight:800;margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em}
 .hc .hi{font-size:12.5px;line-height:1.7;font-weight:500}
@@ -93,42 +93,54 @@ let sel=td(),tab="check",ad={},sk={cur:0,best:0,last:null};
 const lg=k=>{try{return JSON.parse(localStorage.getItem(k))}catch{return null}};
 const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
 
+// SWIM DAYS: Sat(6), Mon(1), Wed(3), Fri(5) — 4x/week
+// OFF DAYS: Sun(0), Tue(2), Thu(4) — light walk + bodyweight only
 function gt(ds){
   const d=dw(ds),t={deen:[],physical:[],mental:[],work:[]};
+  // DEEN — unchanged, this travels with you
   t.deen.push({id:"fajr",label:"Salat Al-Fajr — صلاة الفجر",time:"~5:45"});
   t.deen.push({id:"quran",label:"Quran — صفحة واحدة بعد الفجر",time:"~6:10"});
-  t.deen.push({id:"adhkar_am",label:"Adhkar As-Sabah — أذكار الصباح",time:"~6:15"});
   t.deen.push({id:"dhuhr",label:"Salat Adh-Dhuhr — صلاة الظهر",time:"~13:40"});
   t.deen.push({id:"asr",label:"Salat Al-Asr — صلاة العصر",time:"~17:00"});
   t.deen.push({id:"maghrib",label:"Salat Al-Maghrib — صلاة المغرب",time:"~19:50"});
   t.deen.push({id:"isha",label:"Salat Al-Isha — صلاة العشاء",time:"~21:10"});
-  t.deen.push({id:"adhkar_pm",label:"Adhkar Al-Masa' — أذكار المساء",time:"قبل النوم"});
-  t.physical.push({id:"breakfast",label:"Breakfast at restaurant",time:"7:00-9:00"});
-  t.physical.push({id:"lunch",label:"Lunch: home food + fruit + yoghurt",time:"12:00-15:00"});
-  t.physical.push({id:"dinner",label:"Dinner: home food + fruit + yoghurt",time:"19:00-22:00"});
+  t.deen.push({id:"adhkar",label:"Adhkar — post-prayer + walking to/from mosque",time:"throughout day"});
+  t.deen.push({id:"adhkar_sleep",label:"Pre-sleep: Ikhlas + Falaq + Nas ×3",time:"~23:30"});
+  // PHYSICAL — Agadir version
+  t.physical.push({id:"breakfast",label:"Breakfast you cook (eggs + oats + fruit)",time:"~8:00"});
+  t.physical.push({id:"lunch_portion",label:"Lunch with family — normal portion, no seconds",time:"~12:30"});
+  t.physical.push({id:"dinner_portion",label:"Dinner with family — normal portion",time:"~22:45"});
+  t.physical.push({id:"refuse_junk",label:"Refused afternoon junk food",time:""});
   t.physical.push({id:"water",label:"2L+ water",time:""});
-  t.physical.push({id:"no_junk",label:"Zero fast food / junk",time:""});
-  if(d===1||d===3||d===5)t.physical.push({id:"gym",label:"Gym session (towel!)",time:"9:00-10:30"});
-  if(d===6)t.physical.push({id:"swim",label:"Swimming",time:"8:30-9:30"});
-  if(d===4)t.physical.push({id:"sport",label:"Football/basketball (optional)",time:"evening"});
-  if(d===3||d===0)t.physical.push({id:"laundry",label:"Laundry",time:"22:00"});
-  // Discipline
+  // WORKOUT SCHEDULE:
+  // Mon(1)/Wed(3)/Fri(5) = Gym (Full Body)
+  // Tue(2)/Sat(6) = Swim
+  // Thu(4) = Active recovery (just the daily walk, no extra)
+  // Sun(0) = Full rest
+  if(d===1||d===3||d===5){
+    t.physical.push({id:"workout",label:"GYM — Full Body (45-60 min)",time:"~17:30"});
+  }else if(d===2||d===6){
+    t.physical.push({id:"workout",label:"SWIM — fins + goggles (30-45 min)",time:"~17:30"});
+  }else if(d===4){
+    t.physical.push({id:"workout",label:"Active recovery — light stretch + walk",time:"~17:30"});
+  }
+  // d===0 (Sunday) = no workout checkbox at all, full rest
+  t.physical.push({id:"daily_walk",label:"Post-workout LISS walk (15-30 min)",time:"~18:35"});
+  // DISCIPLINE — Agadir version (no airplane mode ritual)
   t.mental.push({id:"no_pmo",label:"Clean day (no PMO)",time:""});
-  t.mental.push({id:"no_binge",label:"No emotional eating",time:""});
+  t.mental.push({id:"no_binge",label:"No emotional eating / snacking",time:""});
   t.mental.push({id:"no_phone_wc",label:"No phone in bathroom",time:""});
+  t.mental.push({id:"no_phone_bed",label:"Phone not in bed (left on desk)",time:""});
   t.mental.push({id:"wake_fajr",label:"Woke up for Fajr (no snooze)",time:"5:40"});
+  t.mental.push({id:"nap_end",label:"Post-Fajr nap ended by 8:00 (no slide)",time:"8:00"});
   t.mental.push({id:"no_scroll_fajr",label:"No phone until Quran done",time:""});
-  t.mental.push({id:"airplane_on",label:"Airplane mode ON before sleep",time:"~23:00"});
-  t.mental.push({id:"quran_sleep",label:"Fell asleep to Quran audio",time:""});
-  t.mental.push({id:"airplane_kept",label:"Airplane ON until after Fajr+Quran",time:""});
   t.mental.push({id:"screen_limit",label:"Phone entertainment < 1 hour",time:""});
-  t.mental.push({id:"browsers_off",label:"Browsers: school + tracker only",time:""});
-  // Work / Study
-  t.work.push({id:"leetcode",label:"LeetCode — solve 30min + NeetCode 30min",time:"7:30-8:30"});
-  t.work.push({id:"english",label:"Explained solution out loud in English",time:""});
-  t.work.push({id:"study_am",label:"Study block 1: Morning",time:"8:30-13:30"});
-  t.work.push({id:"study_pm1",label:"Study block 2: Dhuhr → Asr",time:"14:00-17:00"});
-  t.work.push({id:"study_pm2",label:"Study block 3: Asr → Maghrib",time:"17:15-19:30"});
+  t.mental.push({id:"browsers_off",label:"Browsers: tracker + study only",time:""});
+  // WORK — Agadir = more time, more blocks
+  t.work.push({id:"leetcode",label:"LeetCode — 30min solve + 30min NeetCode",time:"8:30-9:30"});
+  t.work.push({id:"work_am",label:"Work block 1 — deep work (3h)",time:"9:30-12:30"});
+  t.work.push({id:"work_pm",label:"Work block 2 — deep work (3h)",time:"14:00-17:00"});
+  t.work.push({id:"work_eve",label:"Work block 3 — evening session (2h)",time:"20:00-22:00"});
   return t;
 }
 
@@ -153,7 +165,7 @@ function sn(){const v=document.getElementById("na");if(v)sv("n:"+sel,v.value)}
 function rn(){
   const ts=gt(sel),ck=ad[sel]||{},all=[...ts.deen,...ts.physical,...ts.mental,...ts.work];
   const dn=all.filter(t=>ck[t.id]).length,pct=all.length?Math.round(dn/all.length*100):0;
-  const nm=D[dw(sel)],ig=["Monday","Wednesday","Friday"].includes(nm);
+  const nm=D[dw(sel)];
 
   document.getElementById("streaks").innerHTML=[
     {v:sk.cur,l:"Clean Streak",c:"#818cf8"},{v:sk.best,l:"Best Streak",c:"#4ade80"},
@@ -171,16 +183,14 @@ function rn(){
 
   document.getElementById("dl").innerHTML='<span class="nm">'+nm+'</span><span class="dt">'+sel+'</span>';
 
-  const tbs=[{k:"check",l:"Checklist"},{k:"sched",l:"Schedule"}];
-  if(ig)tbs.push({k:"gym",l:"Gym"});
-  tbs.push({k:"help",l:"Help"});
+  const tbs=[{k:"check",l:"Checklist"},{k:"sched",l:"Schedule"},{k:"workout",l:"Workout"},{k:"help",l:"Help"}];
   document.getElementById("tabs").innerHTML=tbs.map(t=>'<button class="'+(tab===t.k?"on":"")+'" onclick="st(\''+t.k+'\')">'+t.l+'</button>').join("");
 
   const ct=document.getElementById("ct");
   if(tab==="check"){
     ct.innerHTML=rp("deen","Deen","🕌",ts.deen,ck,"#818cf8","#111127")+rp("physical","Physical","💪",ts.physical,ck,"#4ade80","#112011")+rd(ts.mental,ck)+rp("work","Work","💻",ts.work,ck,"#fbbf24","#1f1a0f")+rnt();
   }else if(tab==="sched"){ct.innerHTML=rsc(nm)}
-  else if(tab==="gym"&&ig){ct.innerHTML=rgm()}
+  else if(tab==="workout"){ct.innerHTML=rworkout()}
   else if(tab==="help"){ct.innerHTML=rhl()}
   else ct.innerHTML="";
 
@@ -210,7 +220,6 @@ function rd(tasks,ck){
   let h='<div class="pl" style="background:'+bg+';border:1px solid '+acc+'25">';
   h+='<div class="ph"><div class="pt"><span class="ic">⚔️</span><span class="nm" style="color:'+acc+'">Discipline</span></div>';
   h+='<div class="ps"><span class="ct" style="color:'+acc+'">'+dn+'/'+tasks.length+'</span><div class="pb" style="background:'+acc+'18"><div class="pf" style="width:'+pc+'%;background:'+acc+'"></div></div></div></div>';
-  // Battle banner
   if(clean){
     h+='<div style="text-align:center;padding:8px;background:#10b98115;border-radius:10px;margin-bottom:10px;border:1px solid #10b98130">';
     h+='<span style="font-size:12px;font-weight:800;color:#10b981">✓ CLEAN — '+sk.cur+' day'+(sk.cur!==1?'s':'')+' streak</span>';
@@ -221,7 +230,6 @@ function rd(tasks,ck){
     h+='<span style="font-size:12px;font-weight:800;color:#ef4444">✗ RELAPSED — توضأ وصلِّ توبة — Don\'t spiral</span>';
     h+='</div>';
   }
-  // Tasks
   tasks.forEach(t=>{
     const d=!!ck[t.id];
     h+='<div class="tk'+(d?' dn':'')+'" onclick="tg(\''+t.id+'\')">';
@@ -239,92 +247,178 @@ function rnt(){
 }
 
 function rsc(nm){
-  const ig=["Monday","Wednesday","Friday"].includes(nm),is=nm==="Saturday";
+  const d=D.indexOf(nm);
+  let woLabel="",woColor="#778";
+  if(d===1||d===3||d===5){woLabel="GYM — Full Body (45-60 min)";woColor="#fbbf24"}
+  else if(d===2||d===6){woLabel="SWIM with fins + goggles (30-45 min)";woColor="#38bdf8"}
+  else if(d===4){woLabel="Active recovery — light stretch only";woColor="#4ade80"}
+  else{woLabel="REST DAY — no workout, just walk";woColor="#778"}
   const s=[
-    {t:"5:40",a:"Alarm (airplane still ON)",c:"#f87171"},
-    {t:"5:45",a:"صلاة الفجر — Fajr at mosque",c:"#818cf8"},
-    {t:"~6:10",a:"Quran + أذكار الصباح",c:"#818cf8"},
-    {t:"~6:20",a:"Turn OFF airplane mode",c:"#f87171"},
-    {t:"~6:30",a:"Trottinette → school",c:"#778"},
-    {t:"7:00",a:"Breakfast at restaurant",c:"#4ade80"},
+    {t:"5:40",a:"Wake up for Fajr",c:"#f87171"},
+    {t:"5:45",a:"صلاة الفجر (mosque walk + post-prayer adhkar)",c:"#818cf8"},
+    {t:"~6:00",a:"Quran — 1 page",c:"#818cf8"},
+    {t:"6:30",a:"Back to sleep (alarm 8:00 SHARP)",c:"#778"},
+    {t:"8:00",a:"WAKE — no slide, no snooze",c:"#f87171"},
+    {t:"8:00",a:"Cook breakfast: eggs + oats + fruit",c:"#4ade80"},
+    {t:"8:30",a:"LeetCode: 30min solve + 30min NeetCode",c:"#fbbf24"},
+    {t:"9:30",a:"WORK BLOCK 1 — door closed, deep work",c:"#fbbf24"},
+    {t:"12:30",a:"Family lunch (normal portion)",c:"#4ade80"},
+    {t:"~13:40",a:"صلاة الظهر (mosque walk + post-prayer adhkar)",c:"#818cf8"},
+    {t:"14:00",a:"WORK BLOCK 2 — continue",c:"#fbbf24"},
+    {t:"~17:00",a:"صلاة العصر (mosque walk + post-prayer adhkar)",c:"#818cf8"},
+    {t:"17:25",a:"Walk to gym (5 min)",c:"#4ade80"},
+    {t:"17:30",a:woLabel,c:woColor},
+    {t:"18:30",a:"POST-WORKOUT WALK — 20-25 min (LISS)",c:"#4ade80"},
+    {t:"19:00",a:"Shower",c:"#778"},
+    {t:"~19:50",a:"صلاة المغرب (mosque walk + post-prayer adhkar)",c:"#818cf8"},
+    {t:"20:00",a:"WORK BLOCK 3 — evening session",c:"#fbbf24"},
+    {t:"~21:10",a:"صلاة العشاء (mosque walk + post-prayer adhkar)",c:"#818cf8"},
+    {t:"22:30",a:"Family dinner (normal portion)",c:"#4ade80"},
+    {t:"23:30",a:"Pre-sleep: Ikhlas + Falaq + Nas ×3",c:"#818cf8"},
+    {t:"00:00",a:"Sleep (phone on desk, not in bed)",c:"#f87171"},
   ];
-  if(ig){s.push({t:"7:30",a:"LeetCode: solve 30min + NeetCode 30min",c:"#fbbf24"},{t:"8:30",a:"Study",c:"#fbbf24"},{t:"9:00",a:"GYM (towel!)",c:"#4ade80"},{t:"10:30",a:"Shower → study",c:"#fbbf24"})}
-  else if(is){s.push({t:"7:30",a:"LeetCode: solve 30min + NeetCode 30min",c:"#fbbf24"},{t:"8:30",a:"SWIMMING",c:"#4ade80"},{t:"9:30",a:"Shower → study",c:"#fbbf24"})}
-  else s.push({t:"7:30",a:"LeetCode: solve 30min + NeetCode 30min",c:"#fbbf24"},{t:"8:30",a:"Study",c:"#fbbf24"});
-  s.push({t:"12:00",a:"Lunch",c:"#4ade80"},{t:"13:00",a:"Study",c:"#fbbf24"},{t:"~13:40",a:"صلاة الظهر — Dhuhr",c:"#818cf8"},{t:"~17:00",a:"صلاة العصر — Asr",c:"#818cf8"},{t:"19:00",a:"Dinner",c:"#4ade80"},{t:"~19:50",a:"صلاة المغرب — Maghrib",c:"#818cf8"},{t:"20:00",a:"Wind down / call family",c:"#778"},{t:"~21:10",a:"صلاة العشاء — Isha",c:"#818cf8"},{t:"21:30",a:"Home: prep bag, notes",c:"#778"});
-  if(nm==="Wednesday"||nm==="Sunday")s.push({t:"22:00",a:"Laundry",c:"#778"});
-  s.push({t:"22:30",a:"أذكار المساء — Evening adhkar",c:"#818cf8"},{t:"~23:00",a:"Airplane ON → Quran audio → sleep",c:"#f87171"});
-  const lb=ig?"Gym Day":is?"Swim Day":nm==="Thursday"?"Sport Day":"Rest Day";
-  return '<div class="sc"><div class="st">'+lb+'</div>'+s.map(x=>'<div class="si"><span class="tm" style="color:'+x.c+'">'+x.t+'</span><div class="ln" style="background:'+x.c+'"></div><span class="ac">'+x.a+'</span></div>').join("")+'</div>';
+  const dayLabel=d===1||d===3||d===5?"Gym Day":d===2||d===6?"Swim Day":d===4?"Recovery Day":"Rest Day";
+  return '<div class="sc"><div class="st">'+dayLabel+' — '+nm+'</div>'+s.map(x=>'<div class="si"><span class="tm" style="color:'+x.c+'">'+x.t+'</span><div class="ln" style="background:'+x.c+'"></div><span class="ac">'+x.a+'</span></div>').join("")+'</div>';
 }
 
-function rgm(){
-  const e=[
-    {n:"Warm-up",d:"5 min walk/treadmill",s:""},
-    {n:"1. Goblet Squats",d:"Dumbbell at chest",s:"3×12 — 8kg"},
-    {n:"2. Push-ups",d:"Knees if needed",s:"3 × max"},
-    {n:"3. Dumbbell Rows",d:"One arm, bench",s:"3×10 — 8-10kg"},
-    {n:"4. Overhead DB Press",d:"Seated",s:"3×10 — 6kg"},
-    {n:"5. Walking Lunges",d:"Bodyweight",s:"3×10/leg"},
-    {n:"6. Plank",d:"Hold position",s:"3 × max"},
-    {n:"7. Dead Hangs",d:"Pull-up bar (GRIP FIX)",s:"3 × max"},
-    {n:"Cool-down",d:"Stretch 5 min",s:""},
+function rworkout(){
+  let h='<div class="gc"><div class="gt">Hybrid Plan — Weekly Layout</div>';
+  h+='<div style="font-size:11.5px;color:#aab;line-height:1.7;margin-bottom:14px">';
+  h+='<strong style="color:#fbbf24">Mon · Wed · Fri</strong> — Gym (Full Body, 45-60 min)<br>';
+  h+='<strong style="color:#38bdf8">Tue · Sat</strong> — Swim with fins (30-45 min)<br>';
+  h+='<strong style="color:#4ade80">Thu</strong> — Active recovery (stretch + walk only)<br>';
+  h+='<strong style="color:#778">Sun</strong> — Full rest<br><br>';
+  h+='<strong style="color:#4ade80">Every day</strong>: 20-30 min brisk walk after lunch + mosque walks 5x';
+  h+='</div></div>';
+  // GYM ROUTINE
+  h+='<div class="gc" style="background:#1f1a0f;border-color:#fbbf2425"><div class="gt" style="color:#fbbf24">Gym — Full Body (Mon/Wed/Fri)</div>';
+  const gym=[
+    {n:"Warm-up",d:"5 min treadmill or bike, easy pace",s:""},
+    {n:"1. Barbell Back Squat",d:"Bar on upper traps · feet shoulder-width · sit back into heels · thighs to parallel · chest up",s:"3 × 8-10"},
+    {n:"2. Barbell Bench Press",d:"Grip slightly wider than shoulders · bar to mid-chest · elbows ~45° · ALWAYS use spotter or safety pins",s:"3 × 8-10"},
+    {n:"3. Bent-Over Barbell Row",d:"Hinge to ~45° · flat back · pull bar to lower chest/upper belly · squeeze shoulder blades",s:"3 × 8-10"},
+    {n:"4. Romanian Deadlift",d:"Slight knee bend · push hips BACK (not down) · bar slides down thighs · feel hamstrings stretch · drive hips forward",s:"3 × 10"},
+    {n:"5. Overhead Press",d:"Standing, barbell at shoulders · brace core · press straight up · lock out overhead · don\'t arch lower back",s:"3 × 8-10"},
+    {n:"6. Plank",d:"Forearms on floor · straight line head to heels · squeeze glutes · don\'t let hips sag",s:"3 × max"},
+    {n:"Cool-down",d:"Stretch 5 min — hamstrings, hips, chest, shoulders",s:""},
   ];
-  return '<div class="gc"><div class="gt">Gym Routine — Month 1</div>'+e.map(x=>'<div class="ge"><div><div class="en">'+x.n+'</div><div class="ed">'+x.d+'</div></div><span class="es">'+x.s+'</span></div>').join("")+'<div style="font-size:10.5px;color:#778;margin-top:8px">Rest 60-90s between sets. Bring towel. Progress: reps → then +2kg.</div></div>';
+  gym.forEach(x=>{h+='<div class="ge" style="background:#fbbf2406;align-items:flex-start;flex-direction:column;gap:4px;padding:10px 12px"><div style="display:flex;justify-content:space-between;align-items:center;width:100%"><div class="en">'+x.n+'</div><span class="es" style="color:#fbbf24">'+x.s+'</span></div><div class="ed" style="color:#fbbf24;line-height:1.5">'+x.d+'</div></div>'});
+  h+='<div style="font-size:11px;color:#fbbf24;margin-top:10px;padding:10px;background:#fbbf2410;border-radius:8px;line-height:1.6"><strong>RULES:</strong> Rest 90s between sets. First 2 weeks = FORM ONLY, use light weight (bar = 20kg is fine). Add 2.5kg only when all 3 sets clean at 10 reps. Form > weight. Always. Bring towel + water.</div>';
+  h+='<div style="font-size:11px;color:#778;margin-top:8px;line-height:1.6"><strong>Why these 6 only:</strong> Big compounds = biggest muscles = most calories burned + muscle preserved in deficit. NO bicep curls, leg press, calf raises, crunches — accessory work is for advanced trainees. Squat + Bench + Row + RDL + Press covers your entire body. Trust the program.</div>';
+  h+='</div>';
+  // SWIM ROUTINE
+  h+='<div class="gc" style="background:#0a1620;border-color:#38bdf825"><div class="gt" style="color:#38bdf8">Swim — Tue/Sat (30-45 min)</div>';
+  const swim=[
+    {n:"Warm-up",d:"Easy swim, no fins",s:"~50m"},
+    {n:"Set 1",d:"Fins ON — freestyle steady",s:"4 × 100m"},
+    {n:"Set 2",d:"Fins ON — kick only with board",s:"3 × 50m"},
+    {n:"Set 3",d:"Fins ON — freestyle hard",s:"4 × 75m"},
+    {n:"Cool-down",d:"Fins OFF — easy float swim",s:"~100m"},
+  ];
+  swim.forEach(x=>{h+='<div class="ge" style="background:#38bdf806"><div><div class="en">'+x.n+'</div><div class="ed" style="color:#38bdf8">'+x.d+'</div></div><span class="es" style="color:#38bdf8">'+x.s+'</span></div>'});
+  h+='<div style="font-size:10.5px;color:#778;margin-top:8px">Rest 30-45s between sets. Hydrate before. Don\'t swim alone too far. Progress: longer sets, faster pace.</div></div>';
+  // WALKING
+  h+='<div class="gc" style="background:#0b1810;border-color:#4ade8025"><div class="gt" style="color:#4ade80">Walking — Post-Workout LISS</div>';
+  h+='<div style="font-size:11.5px;color:#aab;line-height:1.7;margin-bottom:10px">';
+  h+='<strong style="color:#4ade80">After gym (Mon/Wed/Fri):</strong> 25-30 min brisk walk<br>';
+  h+='<strong style="color:#4ade80">After swim (Tue/Sat):</strong> 15-20 min brisk walk<br>';
+  h+='<strong style="color:#4ade80">Rest days (Sun/Thu):</strong> 30-40 min standalone walk<br><br>';
+  h+='<strong style="color:#818cf8">Mosque walks (5x daily):</strong> baseline movement, casual pace, ~10 min each.';
+  h+='</div></div>';
+  // TREADMILL SETTINGS
+  h+='<div class="gc" style="background:#0a1620;border-color:#38bdf825"><div class="gt" style="color:#38bdf8">Treadmill Settings</div>';
+  const tm=[
+    {n:"Speed",d:"Brisk pace, you can talk but not sing",s:"5.5-6.5 km/h"},
+    {n:"Incline",d:"More glutes/hams, no joint impact",s:"5-8%"},
+    {n:"Duration",d:"Steady, no intervals, no sprints",s:"25-30 min"},
+    {n:"Target HR",d:"60-70% of max (220 - age)",s:"118-138 BPM"},
+  ];
+  tm.forEach(x=>{h+='<div class="ge" style="background:#38bdf806"><div><div class="en">'+x.n+'</div><div class="ed" style="color:#38bdf8">'+x.d+'</div></div><span class="es" style="color:#38bdf8">'+x.s+'</span></div>'});
+  h+='<div style="font-size:11px;color:#38bdf8;margin-top:10px;padding:10px;background:#38bdf810;border-radius:8px;line-height:1.6"><strong>Progression:</strong> Week 1-2: 5% incline / 5.5 km/h. Week 3-4: 6% / 6 km/h. Week 5+: 8% / 6.5 km/h. Never sprint or jog at 95kg — joint impact builds up fast.</div>';
+  h+='</div>';
+  // OUTDOOR WALKING
+  h+='<div class="gc" style="background:#0b1810;border-color:#4ade8025"><div class="gt" style="color:#4ade80">Outdoor Walking (Sun/Thu or Beach)</div>';
+  h+='<div style="font-size:11.5px;color:#aab;line-height:1.7">';
+  h+='Brisk pace = ~1.6 km in 15-20 min. Find a route with slight uphill if possible. Same target heart rate zone (110-130 BPM). Don\'t jog at 95kg — your knees will thank you in a year. Walking is sustainable forever, jogging gets you an injury in 2-3 weeks.';
+  h+='</div></div>';
+  // BOTTOM LINE
+  h+='<div class="gc" style="background:#271111;border-color:#f8717125"><div class="gt" style="color:#f87171">The Honest Bottom Line</div>';
+  h+='<div style="font-size:11.5px;color:#fca5a5;line-height:1.7">';
+  h+='1. Food > Workout for fat loss. Refusing afternoon junk = #1 fat-loss action.<br><br>';
+  h+='2. Don\'t add cardio thinking more = faster. You\'ll overtrain, eat more, plateau.<br><br>';
+  h+='3. Start LIGHT in the gym. Ego-lifting at 95kg = injury. Form first.<br><br>';
+  h+='4. Target: 0.5-1 kg/week. 5kg in 2 months. Realistic, sustainable, BCG-ready by October.<br><br>';
+  h+='5. Sunday is rest. Don\'t feel guilty. Recovery IS part of the program.';
+  h+='</div></div>';
+  return h;
 }
 
 function rhl(){
   let h='<div class="hc" style="background:#271111;border:1px solid #f8717125"><div class="ht" style="color:#f87171">If You Relapse — Read This</div>';
   ["1. STOP. One slip ≠ total failure.","2. توضأ — Make wudu immediately.","3. صلِّ ركعتين توبة — Pray 2 rakaat tawbah.","4. Do NOT skip next salah. الصلاة = the cleaning.","5. Write in notes: trigger? time? feeling?","6. Continue your day as planned.","7. ﴿قُلْ يَا عِبَادِيَ الَّذِينَ أَسْرَفُوا عَلَىٰ أَنفُسِهِمْ لَا تَقْنَطُوا مِن رَّحْمَةِ اللَّهِ﴾ — (39:53)"].forEach(s=>{h+='<div class="hi" style="color:#fca5a5">'+s+'</div>'});
   h+='</div>';
+  h+='<div class="hc" style="background:#0b0b16;border:1px solid #ffffff0d"><div class="ht" style="color:#778">Sleep Rules (Biphasic)</div>';
+  ["Sleep at 00:00 after family dinner + adhkar","Wake 5:40 for Fajr — non-negotiable","Quran + adhkar BEFORE the nap, not after","Nap window: 6:30 - 8:00 SHARP (90 min max)","Alarm at 8:00 — if it slides past 8:30, you owe yourself a switch to no-nap","Total target: 6h main + 1.5h nap = 7.5h","Phone on desk, not in bed — same rule, every night"].forEach(r=>{h+='<div class="hi" style="color:#aab">→ '+r+'</div>'});
+  h+='</div>';
   h+='<div class="hc" style="background:#0b0b16;border:1px solid #ffffff0d"><div class="ht" style="color:#778">Phone Rules</div>';
-  ["Airplane mode ON before sleep → Quran audio → face down","Morning: alarm off → DO NOT turn off airplane → go to صلاة الفجر","After Fajr + Quran: NOW turn off airplane","Browsers: school + tracker ONLY","YouTube Shorts: disabled","Screen time: 1hr max (PIN with roommate)","NEVER take phone to bathroom"].forEach(r=>{h+='<div class="hi" style="color:#aab">→ '+r+'</div>'});
+  ["Phone stays on desk at night — NOT in bed","No phone in bathroom — ever","Browsers: tracker + study sites only","YouTube Shorts: stay disabled","Screen time: 1hr max entertainment","After Fajr: Quran first, phone second"].forEach(r=>{h+='<div class="hi" style="color:#aab">→ '+r+'</div>'});
   h+='</div>';
   h+='<div class="hc" style="background:#0b0b16;border:1px solid #ffffff0d"><div class="ht" style="color:#778">Nutrition Rules</div>';
-  ["3 meals at restaurant ONLY — always home food","Main dish + fruit + yoghurt. Skip juice & dessert","Between meals: water ONLY. Carry 1.5L bottle","Zero fast food, delivery, or snacks","When hungry: water → wait 15 min → walk"].forEach(r=>{h+='<div class="hi" style="color:#aab">→ '+r+'</div>'});
+  ["Breakfast: YOU cook — eggs + oats + fruit. No bread overload","Lunch + dinner: family food, NORMAL portion, NO seconds","Afternoon junk: REFUSE — you said you could. Prove it.","Between meals: water only. 2L+ daily","No emotional eating because you're \"on break\"","Family will offer extras. \"شبعت بارك الله فيكم\" — done."].forEach(r=>{h+='<div class="hi" style="color:#aab">→ '+r+'</div>'});
+  h+='</div>';
+  h+='<div class="hc" style="background:#0b0b16;border:1px solid #ffffff0d"><div class="ht" style="color:#778">Deep Work Rules</div>';
+  ["Door closed during work blocks","Phone in another room or face-down on desk","Family knows: 9:30-12:30 and 14-17 = do not disturb","If interrupted: 5 min, then back to it","No \"quick check\" of phone between Pomodoros"].forEach(r=>{h+='<div class="hi" style="color:#aab">→ '+r+'</div>'});
   h+='</div>';
   h+='<div class="hc" style="background:#0b0b16;border:1px solid #ffffff0d"><div class="ht" style="color:#778">When Urges Hit</div>';
-  ["1. Leave the room immediately","2. Drink a full glass of water","3. Walk 5-10 min (urge peaks then drops)","4. Call family or text a friend","5. توضأ — Make wudu","6. The urge passes in 15 min. Survive the window."].forEach(r=>{h+='<div class="hi" style="color:#aab">→ '+r+'</div>'});
+  ["1. Leave the room immediately","2. Drink a full glass of water","3. Walk 5-10 min (urge peaks then drops)","4. Call family member in the house","5. توضأ — Make wudu","6. The urge passes in 15 min. Survive the window."].forEach(r=>{h+='<div class="hi" style="color:#aab">→ '+r+'</div>'});
   h+='</div>';
   return h;
 }
 
 function rvd(ts,ck,pct){
-  const mp=ts.deen.filter(t=>t.id!=="quran"&&t.id!=="adhkar_am"&&t.id!=="adhkar_pm"&&!ck[t.id]).length;
-  const aj=!ck["no_junk"],rl=!ck["no_pmo"]&&Object.keys(ck).length>3;
-  const sg=ts.physical.some(t=>t.id==="gym")&&!ck["gym"];
+  const mp=ts.deen.filter(t=>t.id!=="quran"&&t.id!=="adhkar"&&t.id!=="adhkar_sleep"&&!ck[t.id]).length;
+  const aj=!ck["refuse_junk"]&&Object.keys(ck).length>5,rl=!ck["no_pmo"]&&Object.keys(ck).length>3;
+  const wo=!ck["workout"]&&Object.keys(ck).length>5;
   const pb=!ck["no_phone_wc"]&&Object.keys(ck).length>3;
+  const napFail=ck["wake_fajr"]&&!ck["nap_end"]&&Object.keys(ck).length>5;
+  const dj=!ck["work_am"]&&!ck["work_pm"]&&!ck["work_eve"]&&Object.keys(ck).length>5;
   let tt="",cl="#556",sb="";
   if(pct===100){tt="يوم مثالي — PERFECT DAY";cl="#4ade80";
-    sb=sk.cur>=7?sk.cur+" days clean. ﴿فَإِنَّ مَعَ الْعُسْرِ يُسْرًا﴾ (94:6) — You're living this ayah. BCG is getting closer every day."
-      :sk.cur>=3?sk.cur+" days clean. Salawat on time, body trained, mind clear. This is the Abdelali that walks into BCG."
-      :"All salawat on time. Body fed and trained. Mind disciplined. One day closer to BCG, financial freedom, and helping your family. اللهم بارك.";
+    sb=sk.cur>=7?sk.cur+" days clean. Work blocks crushed. ﴿فَإِنَّ مَعَ الْعُسْرِ يُسْرًا﴾ (94:6) — You're living this ayah."
+      :sk.cur>=3?sk.cur+" days clean. Salawat on time, body trained, work moved forward. This is the Abdelali walking into BCG."
+      :"Salawat ✓. Body trained ✓. Work moved forward ✓. One day closer. اللهم بارك.";
   }else if(pct>=85){tt="يوم قوي — STRONG DAY";cl="#4ade80";
     sb="Almost perfect. ﴿وَسَارِعُوا إِلَىٰ مَغْفِرَةٍ مِّن رَّبِّكُمْ﴾ (3:133) — Close the gap tomorrow.";
   }else if(pct>=65){tt="مقبول لكن غير كافي — NOT ENOUGH";cl="#fbbf24";
     if(mp>0)sb="You missed "+mp+" salah. ﴿إِنَّ الصَّلَاةَ تَنْهَىٰ عَنِ الْفَحْشَاءِ وَالْمُنكَرِ﴾ (29:45) — Salah protects everything else. Fix this first.";
-    else if(aj)sb="Junk food = money gone + no body change. You want to walk into BCG confident? That starts today.";
-    else if(sg)sb="You skipped gym. 95kg doesn't become 80kg by skipping. Show up.";
-    else sb="Partial effort = partial results. The person who gets into BCG doesn't coast.";
+    else if(dj)sb="Zero work blocks today. You're here to BUILD, not vacation. Block 1 starts at 9:30. Door closed. No excuses.";
+    else if(aj)sb="You said you'd refuse the junk. You didn't. 95kg → 80kg starts with one \"لا\" today.";
+    else if(wo)sb="Workout skipped. Swim, gym, or walk — doesn't matter, just show up. 95kg doesn't drop by skipping.";
+    else sb="Partial effort. Being at home is comfortable. Comfortable doesn't get you to BCG.";
   }else if(pct>=40){tt="يوم ضعيف — WEAK DAY";cl="#f87171";
-    if(rl)sb="﴿لَا تَقْنَطُوا مِن رَّحْمَةِ اللَّهِ﴾ (39:53) — Make wudu. Pray tawbah. Don't spiral. Read Help tab.";
-    else if(mp>=3)sb=mp+" salawat missed. Your foundation with Allah is cracking. He opens the doors you're chasing. Go back to Him.";
-    else sb="Most of the day wasted. Phone? Boredom? You spent 3 years going in circles. Write what went wrong.";
+    if(rl)sb="﴿لَا تَقْنَطُوا مِن رَّحْمَةِ اللَّهِ﴾ (39:53) — Make wudu. Pray tawbah. Read Help tab.";
+    else if(mp>=3)sb=mp+" salawat missed. Being home isn't a reason — being home means the mosque is closer.";
+    else if(dj)sb="No work, no workout, no plan executed. You're not on vacation. Wasting one week is wasting 25% of your timeline.";
+    else sb="Most of the day wasted. Phone? Family hangout? Write what went wrong in notes.";
   }else{tt="لم تحضر اليوم — YOU DIDN'T SHOW UP";cl="#f87171";
-    sb="This is the old Abdelali — sleeps till noon, scrolls till 3am, eats junk. You left Agadir for Benguerir to change. Your family is counting on you. NOW. Check one box.";
+    sb="This is the old Abdelali — eats whatever, naps, scrolls. You started this reset for a reason. Your family is counting on you. NOW. Check one box.";
   }
   let h='<div class="vt" style="color:'+cl+'">'+tt+'</div><div class="vs">'+sb+'</div>';
   const co=[];
   if(ck["fajr"]&&ck["quran"])co.push({t:"﴿إِنَّ قُرْآنَ الْفَجْرِ كَانَ مَشْهُودًا﴾ (17:78) — Fajr + Quran done. Allah saw you.",c:"#818cf8"});
-  if(ck["gym"]||ck["swim"])co.push({t:"You trained today. One step closer to walking into BCG with confidence.",c:"#4ade80"});
-  if(ck["no_pmo"]&&sk.cur>=3)co.push({t:sk.cur+" days clean. Your salah hits different when you're clean. Keep going.",c:"#818cf8"});
+  if(ck["workout"])co.push({t:"Workout done. Body is changing. Stack a daily walk on top for fastest fat loss.",c:"#38bdf8"});
+  if(ck["daily_walk"])co.push({t:"Daily walk done. Stacks on mosque walks + workout. This is the hidden lever for fat loss.",c:"#4ade80"});
+  if(ck["refuse_junk"])co.push({t:"You said \"no\" to the junk. This is the single biggest fat-loss action of the day.",c:"#4ade80"});
+  if(ck["no_pmo"]&&sk.cur>=3)co.push({t:sk.cur+" days clean. Every day clean is a day Allah saw you choose Him.",c:"#818cf8"});
   if(ck["no_pmo"]&&sk.cur>=7)co.push({t:"One week+ clean. ﴿لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا﴾ (2:286) — You CAN bear this.",c:"#4ade80"});
-  if(pb)co.push({t:"Phone went to bathroom. #1 danger zone. Leave it outside.",c:"#f87171"});
-  if(aj)co.push({t:"Junk food = 0 MAD at month end. Restaurant only.",c:"#f87171"});
-  if(ck["leetcode"])co.push({t:"LeetCode done. One more problem closer to passing CodeSignal at BCG.",c:"#fbbf24"});
-  if(ck["study_am"]&&ck["study_pm1"]&&ck["study_pm2"])co.push({t:"All 3 study blocks completed. This is how you outwork everyone.",c:"#fbbf24"});
-  if(!ck["leetcode"]&&Object.keys(ck).length>5)co.push({t:"No LeetCode today. It's the FIRST thing after breakfast. Don't skip it tomorrow.",c:"#f87171"});
-  if(mp>=3)co.push({t:"Multiple salawat missed. Tomorrow: Fajr at mosque, no matter what.",c:"#f87171"});
+  if(napFail)co.push({t:"You woke for Fajr but the nap slid past 8:00. Block 1 lost time. One more slide and switch to no-nap.",c:"#f87171"});
+  if(ck["nap_end"]&&ck["wake_fajr"])co.push({t:"Fajr + nap ended on time. The split-sleep plan only works because you held the line at 8:00.",c:"#4ade80"});
+  if(pb)co.push({t:"Phone went to bathroom. #1 PMO trigger zone. Leave it outside.",c:"#f87171"});
+  if(ck["leetcode"])co.push({t:"LeetCode done. One problem closer to passing CodeSignal.",c:"#fbbf24"});
+  if(ck["work_am"]&&ck["work_pm"]&&ck["work_eve"])co.push({t:"All 3 work blocks done. ~8 hours of deep work. Keep going.",c:"#fbbf24"});
+  if(ck["work_am"]&&ck["work_pm"]&&!ck["work_eve"])co.push({t:"2/3 work blocks done. Evening block exists for a reason — close the loop.",c:"#fbbf24"});
+  if(!ck["leetcode"]&&Object.keys(ck).length>5)co.push({t:"No LeetCode today. It's the FIRST thing after breakfast.",c:"#f87171"});
+  if(mp>=3)co.push({t:"Multiple salawat missed. Tomorrow: Fajr first, everything else after.",c:"#f87171"});
   if(co.length)h+='<div style="margin-top:10px">'+co.map(c=>'<div class="co" style="color:'+c.c+';background:'+c.c+'0a;border-color:'+c.c+'40">'+c.t+'</div>').join("")+'</div>';
   return h;
 }
