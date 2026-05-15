@@ -113,19 +113,19 @@ function gt(ds){
   t.physical.push({id:"refuse_junk",label:"Refused afternoon junk food",time:""});
   t.physical.push({id:"water",label:"2L+ water",time:""});
   // WORKOUT SCHEDULE:
-  // Mon(1)/Wed(3)/Fri(5) = Gym (Full Body)
-  // Tue(2)/Sat(6) = Swim
+  // Mon(1)/Wed(3)/Fri(5) = Gym (Full Body) at 17:30
+  // Tue(2)/Sat(6) = Swim morning at 8:30 (safety: beach populated)
   // Thu(4) = Active recovery (just the daily walk, no extra)
   // Sun(0) = Full rest
   if(d===1||d===3||d===5){
     t.physical.push({id:"workout",label:"GYM — Full Body (45-60 min)",time:"~17:30"});
   }else if(d===2||d===6){
-    t.physical.push({id:"workout",label:"SWIM — fins + goggles (30-45 min)",time:"~17:30"});
+    t.physical.push({id:"workout",label:"SWIM — morning with fins (30-45 min)",time:"~8:30"});
   }else if(d===4){
     t.physical.push({id:"workout",label:"Active recovery — light stretch + walk",time:"~17:30"});
   }
   // d===0 (Sunday) = no workout checkbox at all, full rest
-  t.physical.push({id:"daily_walk",label:"Post-workout LISS walk (15-30 min)",time:"~18:35"});
+  t.physical.push({id:"daily_walk",label:"Post-workout LISS walk (20-30 min)",time:"~18:35"});
   // DISCIPLINE — Agadir version (no airplane mode ritual)
   t.mental.push({id:"no_pmo",label:"Clean day (no PMO)",time:""});
   t.mental.push({id:"no_binge",label:"No emotional eating / snacking",time:""});
@@ -248,47 +248,80 @@ function rnt(){
 
 function rsc(nm){
   const d=D.indexOf(nm);
+  const isSwim=(d===2||d===6);
+  const isGym=(d===1||d===3||d===5);
   let woLabel="",woColor="#778";
-  if(d===1||d===3||d===5){woLabel="GYM — Full Body (45-60 min)";woColor="#fbbf24"}
-  else if(d===2||d===6){woLabel="SWIM with fins + goggles (30-45 min)";woColor="#38bdf8"}
+  if(isGym){woLabel="GYM — Full Body (45-60 min)";woColor="#fbbf24"}
   else if(d===4){woLabel="Active recovery — light stretch only";woColor="#4ade80"}
-  else{woLabel="REST DAY — no workout, just walk";woColor="#778"}
-  const s=[
-    {t:"5:40",a:"Wake up for Fajr",c:"#f87171"},
-    {t:"5:45",a:"صلاة الفجر (mosque walk + post-prayer adhkar)",c:"#818cf8"},
-    {t:"~6:00",a:"Quran — 1 page",c:"#818cf8"},
-    {t:"6:30",a:"Back to sleep (alarm 8:00 SHARP)",c:"#778"},
-    {t:"8:00",a:"WAKE — no slide, no snooze",c:"#f87171"},
-    {t:"8:00",a:"Cook breakfast: eggs + oats + fruit",c:"#4ade80"},
-    {t:"8:30",a:"LeetCode: 30min solve + 30min NeetCode",c:"#fbbf24"},
-    {t:"9:30",a:"WORK BLOCK 1 — door closed, deep work",c:"#fbbf24"},
-    {t:"12:30",a:"Family lunch (normal portion)",c:"#4ade80"},
-    {t:"~13:40",a:"صلاة الظهر (mosque walk + post-prayer adhkar)",c:"#818cf8"},
-    {t:"14:00",a:"WORK BLOCK 2 — continue",c:"#fbbf24"},
-    {t:"~17:00",a:"صلاة العصر (mosque walk + post-prayer adhkar)",c:"#818cf8"},
-    {t:"17:25",a:"Walk to gym (5 min)",c:"#4ade80"},
-    {t:"17:30",a:woLabel,c:woColor},
-    {t:"18:30",a:"POST-WORKOUT WALK — 20-25 min (LISS)",c:"#4ade80"},
-    {t:"19:00",a:"Shower",c:"#778"},
-    {t:"~19:50",a:"صلاة المغرب (mosque walk + post-prayer adhkar)",c:"#818cf8"},
-    {t:"20:00",a:"WORK BLOCK 3 — evening session",c:"#fbbf24"},
-    {t:"~21:10",a:"صلاة العشاء (mosque walk + post-prayer adhkar)",c:"#818cf8"},
-    {t:"22:30",a:"Family dinner (normal portion)",c:"#4ade80"},
-    {t:"23:30",a:"Pre-sleep: Ikhlas + Falaq + Nas ×3",c:"#818cf8"},
-    {t:"00:00",a:"Sleep (phone on desk, not in bed)",c:"#f87171"},
-  ];
-  const dayLabel=d===1||d===3||d===5?"Gym Day":d===2||d===6?"Swim Day":d===4?"Recovery Day":"Rest Day";
+  else if(d===0){woLabel="REST DAY — just walk";woColor="#778"}
+  let s;
+  if(isSwim){
+    // SWIM DAY — morning swim for safety
+    s=[
+      {t:"5:40",a:"Wake up for Fajr",c:"#f87171"},
+      {t:"5:45",a:"صلاة الفجر (mosque walk + post-prayer adhkar)",c:"#818cf8"},
+      {t:"~6:00",a:"Quran — 1 page",c:"#818cf8"},
+      {t:"6:30",a:"Back to sleep (alarm 8:00 SHARP)",c:"#778"},
+      {t:"8:00",a:"WAKE — no slide",c:"#f87171"},
+      {t:"8:00",a:"Light pre-swim snack (banana/dates only)",c:"#4ade80"},
+      {t:"8:15",a:"Trottinette to beach",c:"#4ade80"},
+      {t:"8:30",a:"SWIM with fins (30-45 min, beach safe = populated)",c:"#38bdf8"},
+      {t:"9:15",a:"Trottinette back + quick rinse",c:"#4ade80"},
+      {t:"9:30",a:"Real breakfast (eggs + oats + fruit)",c:"#4ade80"},
+      {t:"10:00",a:"WORK BLOCK 1 — deep work (2.5h)",c:"#fbbf24"},
+      {t:"12:30",a:"Family lunch (normal portion)",c:"#4ade80"},
+      {t:"~13:40",a:"صلاة الظهر (mosque walk + post-prayer adhkar)",c:"#818cf8"},
+      {t:"14:00",a:"WORK BLOCK 2 — continue (3h)",c:"#fbbf24"},
+      {t:"~17:00",a:"صلاة العصر (mosque walk + post-prayer adhkar)",c:"#818cf8"},
+      {t:"17:30",a:"LeetCode (1h, moved from morning)",c:"#fbbf24"},
+      {t:"18:30",a:"Post-LeetCode walk — 30 min LISS",c:"#4ade80"},
+      {t:"19:00",a:"Shower",c:"#778"},
+      {t:"~19:50",a:"صلاة المغرب (mosque walk + post-prayer adhkar)",c:"#818cf8"},
+      {t:"20:00",a:"WORK BLOCK 3 — evening session (2h)",c:"#fbbf24"},
+      {t:"~21:10",a:"صلاة العشاء (mosque walk + post-prayer adhkar)",c:"#818cf8"},
+      {t:"22:30",a:"Family dinner (normal portion)",c:"#4ade80"},
+      {t:"23:30",a:"Pre-sleep: Ikhlas + Falaq + Nas ×3",c:"#818cf8"},
+      {t:"00:00",a:"Sleep (phone on desk, not in bed)",c:"#f87171"},
+    ];
+  }else{
+    // GYM DAY / REST DAY / RECOVERY DAY — standard morning, workout in afternoon
+    s=[
+      {t:"5:40",a:"Wake up for Fajr",c:"#f87171"},
+      {t:"5:45",a:"صلاة الفجر (mosque walk + post-prayer adhkar)",c:"#818cf8"},
+      {t:"~6:00",a:"Quran — 1 page",c:"#818cf8"},
+      {t:"6:30",a:"Back to sleep (alarm 8:00 SHARP)",c:"#778"},
+      {t:"8:00",a:"WAKE — no slide, no snooze",c:"#f87171"},
+      {t:"8:00",a:"Cook breakfast: eggs + oats + fruit",c:"#4ade80"},
+      {t:"8:30",a:"LeetCode: 30min solve + 30min NeetCode",c:"#fbbf24"},
+      {t:"9:30",a:"WORK BLOCK 1 — door closed, deep work (3h)",c:"#fbbf24"},
+      {t:"12:30",a:"Family lunch (normal portion)",c:"#4ade80"},
+      {t:"~13:40",a:"صلاة الظهر (mosque walk + post-prayer adhkar)",c:"#818cf8"},
+      {t:"14:00",a:"WORK BLOCK 2 — continue (3h)",c:"#fbbf24"},
+      {t:"~17:00",a:"صلاة العصر (mosque walk + post-prayer adhkar)",c:"#818cf8"},
+      {t:"17:25",a:"Trottinette to gym (5 min)",c:"#4ade80"},
+      {t:"17:30",a:woLabel,c:woColor},
+      {t:"18:30",a:"POST-WORKOUT WALK — 20-30 min (LISS)",c:"#4ade80"},
+      {t:"19:00",a:"Shower",c:"#778"},
+      {t:"~19:50",a:"صلاة المغرب (mosque walk + post-prayer adhkar)",c:"#818cf8"},
+      {t:"20:00",a:"WORK BLOCK 3 — evening session (2h)",c:"#fbbf24"},
+      {t:"~21:10",a:"صلاة العشاء (mosque walk + post-prayer adhkar)",c:"#818cf8"},
+      {t:"22:30",a:"Family dinner (normal portion)",c:"#4ade80"},
+      {t:"23:30",a:"Pre-sleep: Ikhlas + Falaq + Nas ×3",c:"#818cf8"},
+      {t:"00:00",a:"Sleep (phone on desk, not in bed)",c:"#f87171"},
+    ];
+  }
+  const dayLabel=isGym?"Gym Day":isSwim?"Swim Day (Morning)":d===4?"Recovery Day":"Rest Day";
   return '<div class="sc"><div class="st">'+dayLabel+' — '+nm+'</div>'+s.map(x=>'<div class="si"><span class="tm" style="color:'+x.c+'">'+x.t+'</span><div class="ln" style="background:'+x.c+'"></div><span class="ac">'+x.a+'</span></div>').join("")+'</div>';
 }
 
 function rworkout(){
   let h='<div class="gc"><div class="gt">Hybrid Plan — Weekly Layout</div>';
   h+='<div style="font-size:11.5px;color:#aab;line-height:1.7;margin-bottom:14px">';
-  h+='<strong style="color:#fbbf24">Mon · Wed · Fri</strong> — Gym (Full Body, 45-60 min)<br>';
-  h+='<strong style="color:#38bdf8">Tue · Sat</strong> — Swim with fins (30-45 min)<br>';
-  h+='<strong style="color:#4ade80">Thu</strong> — Active recovery (stretch + walk only)<br>';
+  h+='<strong style="color:#fbbf24">Mon · Wed · Fri</strong> — Gym (Full Body), 17:30<br>';
+  h+='<strong style="color:#38bdf8">Tue · Sat</strong> — Swim morning 8:30 (safety: beach populated)<br>';
+  h+='<strong style="color:#4ade80">Thu</strong> — Active recovery (stretch + walk)<br>';
   h+='<strong style="color:#778">Sun</strong> — Full rest<br><br>';
-  h+='<strong style="color:#4ade80">Every day</strong>: 20-30 min brisk walk after lunch + mosque walks 5x';
+  h+='<strong style="color:#aab">Why split timing:</strong> Swim in the morning when the beach is populated (safety). Gym in the afternoon when the body is primed (better performance). On swim days, LeetCode shifts to 17:30 after Asr.';
   h+='</div></div>';
   // GYM ROUTINE
   h+='<div class="gc" style="background:#1f1a0f;border-color:#fbbf2425"><div class="gt" style="color:#fbbf24">Gym — Full Body (Mon/Wed/Fri)</div>';
@@ -307,7 +340,7 @@ function rworkout(){
   h+='<div style="font-size:11px;color:#778;margin-top:8px;line-height:1.6"><strong>Why these 6 only:</strong> Big compounds = biggest muscles = most calories burned + muscle preserved in deficit. NO bicep curls, leg press, calf raises, crunches — accessory work is for advanced trainees. Squat + Bench + Row + RDL + Press covers your entire body. Trust the program.</div>';
   h+='</div>';
   // SWIM ROUTINE
-  h+='<div class="gc" style="background:#0a1620;border-color:#38bdf825"><div class="gt" style="color:#38bdf8">Swim — Tue/Sat (30-45 min)</div>';
+  h+='<div class="gc" style="background:#0a1620;border-color:#38bdf825"><div class="gt" style="color:#38bdf8">Swim — Tue/Sat MORNING (8:30-9:15)</div>';
   const swim=[
     {n:"Warm-up",d:"Easy swim, no fins",s:"~50m"},
     {n:"Set 1",d:"Fins ON — freestyle steady",s:"4 × 100m"},
@@ -316,13 +349,15 @@ function rworkout(){
     {n:"Cool-down",d:"Fins OFF — easy float swim",s:"~100m"},
   ];
   swim.forEach(x=>{h+='<div class="ge" style="background:#38bdf806"><div><div class="en">'+x.n+'</div><div class="ed" style="color:#38bdf8">'+x.d+'</div></div><span class="es" style="color:#38bdf8">'+x.s+'</span></div>'});
-  h+='<div style="font-size:10.5px;color:#778;margin-top:8px">Rest 30-45s between sets. Hydrate before. Don\'t swim alone too far. Progress: longer sets, faster pace.</div></div>';
+  h+='<div style="font-size:11px;color:#38bdf8;margin-top:10px;padding:10px;background:#38bdf810;border-radius:8px;line-height:1.6"><strong>SAFETY:</strong> Morning slot chosen because beach is populated 8-10am. Light pre-swim snack only (banana/dates) — no full breakfast. Never swim alone too far from shore. Goggles + fins for main sets. Hydrate before. After 10am beach empties — DO NOT swim then.</div>';
+  h+='</div>';
   // WALKING
   h+='<div class="gc" style="background:#0b1810;border-color:#4ade8025"><div class="gt" style="color:#4ade80">Walking — Post-Workout LISS</div>';
   h+='<div style="font-size:11.5px;color:#aab;line-height:1.7;margin-bottom:10px">';
-  h+='<strong style="color:#4ade80">After gym (Mon/Wed/Fri):</strong> 25-30 min brisk walk<br>';
-  h+='<strong style="color:#4ade80">After swim (Tue/Sat):</strong> 15-20 min brisk walk<br>';
-  h+='<strong style="color:#4ade80">Rest days (Sun/Thu):</strong> 30-40 min standalone walk<br><br>';
+  h+='<strong style="color:#fbbf24">Gym days (Mon/Wed/Fri):</strong> 25-30 min brisk walk after lift, before shower<br>';
+  h+='<strong style="color:#38bdf8">Swim days (Tue/Sat):</strong> Post-LeetCode walk at ~18:30, 30 min<br>';
+  h+='<strong style="color:#4ade80">Recovery (Thu):</strong> 30-40 min standalone walk<br>';
+  h+='<strong style="color:#778">Rest (Sun):</strong> Optional walk if you feel like it<br><br>';
   h+='<strong style="color:#818cf8">Mosque walks (5x daily):</strong> baseline movement, casual pace, ~10 min each.';
   h+='</div></div>';
   // TREADMILL SETTINGS
